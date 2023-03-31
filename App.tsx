@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect} from 'react';
 import {
   SafeAreaView,
   ScrollView,
@@ -15,36 +15,48 @@ import {
   Alert,
   FlatList,
   RefreshControl,
+  Platform,
+  Dimensions,
 
 } from 'react-native';
+import { NavigationContainer } from "@react-navigation/native";
+import { createNativeStackNavigator } from "@react-navigation/native-stack";
+import HomeScreen from "./src/screens/HomeScreen";
+import DetailsScreen from './src/screens/DetailsScreen';
+const Stack = createNativeStackNavigator()
 
 function App(): JSX.Element {
   return (
-    <SafeAreaView style={{backgroundColor: "beige", flex: 1, justifyContent: "center", alignItems: "center"}}>
-      <Text style = {styles.color}>Naber gençlik</Text>
-      <Text style = {styles.color}>Naber gençlikkk</Text>
-      <Text style = {styles.color}>Naber gençliik!</Text>
-    </SafeAreaView>
+    <NavigationContainer>
+      <Stack.Navigator initialRouteName='Home'>
+        <Stack.Screen name = "Home" component={HomeScreen}/>
+        <Stack.Screen name = "DetailsScreen" component={DetailsScreen}/>
+      </Stack.Navigator>
+    </NavigationContainer>
   );
 }
+/*
 
+*/
 const styles = StyleSheet.create({
   container:
   {
     flex: 1,
-    backgroundColor: 'white',
-    justifyContent: 'center',
+    backgroundColor: "beige",
+    //flexDirection: "column",
+    justifyContent: "center",
     alignItems: 'center',
     // eğer buraya (yani safe are style) justifyContent: "center" yazarsak dikeyde,
     // alignItems: "center" yazarsak yatayda ortalar, safe are içindeki bütün elementleri
   },
   HeaderFont:
   {
-    fontSize: 22,
+    fontSize: 50,
     fontWeight: "500",
-    color: "purple"
+    color: "black"
+    
   },
-  color:
+  Font:
   {
     color: "brown",
     fontSize: 22
@@ -52,6 +64,14 @@ const styles = StyleSheet.create({
 });
 
 export default App;
+
+/*
+<View style = {{backgroundColor: 'purple', width: 100, height: 100}}/>
+      <View style = {{backgroundColor: 'magenta', width: 100, height: 100}}/>
+      <View style = {{backgroundColor: 'white', width: 100, height: 100}}/>
+      <View style = {{backgroundColor: 'black', width: 100, height: 100}}/>
+      <View style = {{backgroundColor: 'green', width: 100, height: 100}}/>
+*/
 
 /*
 ------------------------------------------------------------------------------------------------
@@ -236,5 +256,89 @@ const [refreshing, setRefreshing] = useState(false)
     }, 2000);
   }
 
-  ------------------------------------------------------------------------------------------------
+------------------------------------------------------------------------------------------------
+// text lere hangi işletim sistemi olduğunu ve ekran boyutlarını yazar
+
+function App(): JSX.Element {
+  console.log(Platform.OS, Dimensions.get("screen"))
+  return (
+    <SafeAreaView style={styles.container}>
+      <Text style = {styles.color}>This is an {Platform.OS} application!</Text>
+      <Text style = {styles.color}>height: {Dimensions.get("screen").height}</Text>
+      <Text style = {styles.color}>Width: {Dimensions.get("screen").width}</Text>
+    </SafeAreaView>
+  );
+}
+
+------------------------------------------------------------------------------------------------
+
+const ColoredView = (props) =>
+{
+  return (
+    <View style = {{backgroundColor: props.backgroundColor, flex: 1}}>
+      <Text style={styles.HeaderFont}>{props.text}</Text>
+    </View>
+  )
+}
+
+function App(): JSX.Element {
+  return (
+    <SafeAreaView style={styles.container}>
+      <ColoredView backgroundColor={"blue"} text = "naptik"/>
+      <View style = {{backgroundColor: 'white', flex: 1}}/>
+      <View style = {{backgroundColor: 'red', flex: 1}}/>
+    </SafeAreaView>
+  );
+}
+
+------------------------------------------------------------------------------------------------
+
+  function App(): JSX.Element {
+  const [count, setCount] = useState(0)
+
+useEffect(() => {
+  console.log("both updates and awake", count)
+});   // overall state update
+
+useEffect(() => {
+  console.log("only awake!")
+}, []);   // only at the start
+
+useEffect(() => {
+  console.log("only 'count' updates!")
+}, [count])   // can be array of items, triggers when the mentioned state or states has changed
+
+  let count2 = 0
+  return (
+    <SafeAreaView style={styles.container}>
+      <Text style = {styles.HeaderFont}>Count: {count}</Text>
+      <Button title = "Up" onPress={() => setCount(count + 1)}/>
+    </SafeAreaView>
+  );
+}
+
+------------------------------------------------------------------------------------------------
+
+function App(): JSX.Element {
+  const fetchdata = () => {
+    fetch('https://jsonplaceholder.typicode.com/posts')
+      .then(response => response.json())
+      .then(json => console.log(json))
+  };
+  return (
+    <SafeAreaView style={styles.container}>
+      <Button title = "Call API - Get Posts" onPress={fetchdata} />
+    </SafeAreaView>
+  );
+}
+
+------------------------------------------------------------------------------------------------
+
+
+
+------------------------------------------------------------------------------------------------
+
+
+
+------------------------------------------------------------------------------------------------
 */
