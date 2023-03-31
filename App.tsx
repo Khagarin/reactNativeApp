@@ -1,4 +1,4 @@
-import React, { useState, useEffect} from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   SafeAreaView,
   ScrollView,
@@ -23,16 +23,23 @@ import { NavigationContainer } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import HomeScreen from "./src/screens/HomeScreen";
 import DetailsScreen from './src/screens/DetailsScreen';
+import { Provider } from "react-redux";
+import { createStore } from "redux";
+import reducers from "./src/redux";
+
 const Stack = createNativeStackNavigator()
 
 function App(): JSX.Element {
+  const store = createStore(reducers)
   return (
-    <NavigationContainer>
-      <Stack.Navigator initialRouteName='Home'>
-        <Stack.Screen name = "Home" component={HomeScreen}/>
-        <Stack.Screen name = "DetailsScreen" component={DetailsScreen}/>
-      </Stack.Navigator>
-    </NavigationContainer>
+    <Provider store = {store}>
+      <NavigationContainer>
+        <Stack.Navigator initialRouteName='Home'>
+          <Stack.Screen name="Home" component={HomeScreen} />
+          <Stack.Screen name="DetailsScreen" component={DetailsScreen} />
+        </Stack.Navigator>
+      </NavigationContainer>
+    </Provider>
   );
 }
 /*
@@ -54,7 +61,7 @@ const styles = StyleSheet.create({
     fontSize: 50,
     fontWeight: "500",
     color: "black"
-    
+
   },
   Font:
   {
